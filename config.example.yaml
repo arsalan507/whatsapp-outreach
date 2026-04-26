@@ -1,0 +1,116 @@
+# ───────────────────────────────────────────────────────────────────────────
+# WhatsApp Outreach — Configuration
+# Copy this file to config.yaml and customize. config.yaml is gitignored.
+# ───────────────────────────────────────────────────────────────────────────
+
+# Categories of leads you scrape. Each one gets its own search query, message
+# variants, and image rotation. Add or remove freely.
+categories:
+  ac:
+    label: "AC Repair"                    # Human-readable label
+    service_name: "AC repair"             # Used inside message templates
+    apify_search: "AC repair Bangalore"   # Google Maps query (Apify)
+
+  phone:
+    label: "Phone Repair"
+    service_name: "phone repair"
+    apify_search: "Phone repair Bangalore"
+
+# ───────────────────────────────────────────────────────────────────────────
+# Message templates — Hormozi-style cold outreach.
+# Available placeholders: {name} {area} {service} {sender_name} {sender_phone}
+# Variants are picked based on the lead's profile (no website / weak / strong).
+# ───────────────────────────────────────────────────────────────────────────
+messages:
+  no_website:
+    "Hi! *{name}* doesn't show up when people search \"{service} near me\" in {area}.
+
+That's calls going to competitors every day.
+
+Want me to show you exactly how many? Free, 5 mins. — {sender_name}"
+
+  weak_presence:
+    "Hi! Checked *{name}* on Google — your competitors in {area} are getting more calls because they show up higher.
+
+Can I show you a free breakdown of what it would take to beat them?
+
+5 mins, no commitment. — {sender_name}"
+
+  established:
+    "Hi! *{name}* has good reviews in {area} — but competitors are running Google Ads and taking calls that should be yours.
+
+Can I show you what they're spending and how to beat them? Free, 5 mins. — {sender_name}"
+
+# ───────────────────────────────────────────────────────────────────────────
+# Image outreach — paste paths to your own creative.
+# Use proof / pain / curiosity images that match the message.
+# Rotate so leads in the same area don't all see the same image.
+# ───────────────────────────────────────────────────────────────────────────
+images:
+  pain:
+    path: "./assets/pain.png"
+    caption: |
+      *{name}* — most {service} shops in {area} miss 70% of search calls.
+
+      Free 5-min audit shows exactly which searches you're losing.
+      Reply *YES* — {sender_name}
+
+  proof:
+    path: "./assets/proof.png"
+    caption: |
+      Real result: *{area}* shop → ₹457/lead → 3x calls in 90 days.
+
+      Free audit for *{name}*? Reply *YES* — takes 5 mins.
+      {sender_brand} | {sender_phone}
+
+  competitor:
+    path: "./assets/competitor.png"
+    caption: |
+      Your competitor started Google Ads. Every call they get = one less for you.
+
+      Free Google audit for *{name}* → see exactly what you're missing.
+      Reply *YES* or {sender_phone}
+
+# Image rotation per category (cycle through these in order).
+image_rotation:
+  ac:    [pain, competitor, proof]
+  phone: [proof, competitor, pain]
+
+# ───────────────────────────────────────────────────────────────────────────
+# Follow-up — sent N days after the original cold message to non-responders.
+# ───────────────────────────────────────────────────────────────────────────
+followup:
+  min_days_after_send: 3
+
+  images:
+    competitor:
+      path: "./assets/followup_competitor.png"
+      caption: |
+        Hi *{name}*, just checking in.
+
+        This is exactly what's happening in *{area}* right now — your competitor is getting those calls.
+
+        Free 5-min audit to see your position? Reply *YES*.
+        — {sender_name} | {sender_brand}
+
+    free_audit:
+      path: "./assets/followup_audit.png"
+      caption: |
+        Hi *{name}* — sent you a message earlier about Google Ads for your shop.
+
+        Still offering the free Google Presence Audit — no cost, no obligation.
+        Takes 5 mins. Shows you exactly how many leads you're missing monthly.
+
+        Reply *YES* to book. — {sender_name} | {sender_phone}
+
+  rotation: [competitor, free_audit]
+
+# ───────────────────────────────────────────────────────────────────────────
+# Lead scoring — rules used by process_leads.py
+# ───────────────────────────────────────────────────────────────────────────
+scoring:
+  rating_sweet_spot: [3.0, 4.3]    # rating range that scores highest
+  reviews_sweet_spot: [10, 150]    # review count range that scores highest
+  no_website_bonus: 20             # bonus when lead has no website (big opportunity)
+  hot_threshold: 65                # leads scoring >= this are "hot"
+  warm_threshold: 45               # leads scoring [warm, hot) are "warm"

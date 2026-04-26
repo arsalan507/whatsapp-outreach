@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.venv/
+venv/
+
+# Local config + secrets — never commit
+.env
+gsheet_creds.json
+config.yaml
+
+# WhatsApp Web session (auth tokens, never share)
+.whatsapp-automation/
+~/.whatsapp-automation/
+
+# Generated data — never commit lead lists or sent logs
+leads/*.json
+leads/*.csv
+sent/*.json
+followup/*.json
+screenshots/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp

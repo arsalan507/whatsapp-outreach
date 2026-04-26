@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Example Cool Air Services",
+    "phone": "9000000001",
+    "area": "Indiranagar",
+    "address": "12 Main Rd, Indiranagar, Bangalore",
+    "rating": 3.8,
+    "reviews": 42,
+    "website": "",
+    "google_maps_url": "",
+    "category": "ac",
+    "score": 78,
+    "score_reasons": ["Rating 3.8 — improvable", "42 reviews — established", "No website — big opportunity"],
+    "message": "Hi! *Example Cool Air Services* doesn't show up when people search \"AC repair near me\" in Indiranagar.\n\nThat's calls going to competitors every day.\n\nWant me to show you exactly how many? Free, 5 mins. — Your Name",
+    "status": "pending",
+    "scraped_at": "2026-04-26T10:00:00"
+  },
+  {
+    "name": "Example Phone Repair Hub",
+    "phone": "9000000002",
+    "area": "HSR Layout",
+    "address": "27 Cross, HSR Layout, Bangalore",
+    "rating": 4.1,
+    "reviews": 88,
+    "website": "https://example-repair.in",
+    "google_maps_url": "",
+    "category": "phone",
+    "score": 71,
+    "score_reasons": ["Rating 4.1 — improvable", "88 reviews — established", "Has website"],
+    "message": "Hi! *Example Phone Repair Hub* has good reviews in HSR Layout — but competitors are running Google Ads and taking calls that should be yours.\n\nCan I show you what they're spending and how to beat them? Free, 5 mins. — Your Name",
+    "status": "pending",
+    "scraped_at": "2026-04-26T10:00:00"
+  }
+]
