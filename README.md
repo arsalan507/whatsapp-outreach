@@ -194,7 +194,7 @@ python3 followup.py --send --min-days 5 --limit 20
 ## Credits
 
 Built by [@arsalan507](https://github.com/arsalan507) at
-[ARKOV](https://arkov.in) — AI agent deployment for Indian SMBs.
+[KineticXHub](https://kineticxhub.com) — AI-powered growth for Indian SMBs.
 
 Hormozi cold-message style adapted from his public B2B outreach principles.
 
