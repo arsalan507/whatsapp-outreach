@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 import random
+import shutil
 import subprocess
 import sys
 import time
@@ -135,15 +136,45 @@ def send_text(page, message: str) -> bool:
     return False
 
 def _copy_image_to_clipboard(image_path: str):
-    """macOS clipboard via AppleScript. For Linux/Windows, swap with xclip / PowerShell."""
-    if sys.platform != "darwin":
-        raise NotImplementedError(
-            "Image send currently uses macOS clipboard via osascript. "
-            "Adapt _copy_image_to_clipboard() for your OS (xclip on Linux, "
-            "PowerShell Set-Clipboard on Windows)."
+    """Copy image to clipboard — macOS (osascript), Linux (xclip/wl-copy), Windows (PowerShell)."""
+    path = str(Path(image_path).resolve())
+
+    if sys.platform == "darwin":
+        script = f'set the clipboard to (read (POSIX file "{path}") as «class PNGf»)'
+        subprocess.run(["osascript", "-e", script], check=True)
+
+    elif sys.platform.startswith("linux"):
+        # Prefer Wayland (wl-copy) when available, fall back to X11 (xclip).
+        if os.environ.get("WAYLAND_DISPLAY") and shutil.which("wl-copy"):
+            with open(path, "rb") as f:
+                subprocess.run(["wl-copy", "--type", "image/png"], stdin=f, check=True)
+        elif shutil.which("xclip"):
+            subprocess.run(
+                ["xclip", "-selection", "clipboard", "-t", "image/png", "-i", path],
+                check=True,
+            )
+        else:
+            raise RuntimeError(
+                "No clipboard tool found. Install one:\n"
+                "  sudo apt install xclip        # X11\n"
+                "  sudo apt install wl-clipboard  # Wayland"
+            )
+
+    elif sys.platform == "win32":
+        ps_script = (
+            "Add-Type -AssemblyName System.Windows.Forms;"
+            "Add-Type -AssemblyName System.Drawing;"
+            f"$img = [System.Drawing.Image]::FromFile('{path}');"
+            "[System.Windows.Forms.Clipboard]::SetImage($img);"
+            "$img.Dispose()"
         )
-    script = f'set the clipboard to (read (POSIX file "{image_path}") as «class PNGf»)'
-    subprocess.run(["osascript", "-e", script], check=True)
+        subprocess.run(
+            ["powershell", "-NoProfile", "-NonInteractive", "-Command", ps_script],
+            check=True,
+        )
+
+    else:
+        raise NotImplementedError(f"Unsupported platform: {sys.platform}")
 
 def send_image(page, image_path: str, caption: str) -> bool:
     """Send image + caption via clipboard paste — bypasses WA Web's ever-changing UI."""
